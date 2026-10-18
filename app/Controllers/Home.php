@@ -125,16 +125,21 @@ class Home extends BaseController
 
     public function customer(): string|RedirectResponse
     {
-        if (!session()->get('user_id') || session()->get('role') !== 'customer') return redirect()->to('/?mode=login');
+        if (!session()->get('user_id')) return redirect()->to('/?mode=login');
+        if (session()->get('role') !== 'customer') return redirect()->to(in_array(session()->get('role'), ['admin', 'employee'], true) ? '/admin' : '/?mode=login');
         if (session()->get('must_change_password')) return redirect()->to('/account/password');
         $db = db_connect();
         $user = $db->table('users')->where('id', session()->get('user_id'))->get()->getRowArray();
+        if (!$user || $user['role'] !== 'customer' || $user['status'] !== 'active') {
+            session()->destroy();
+            return redirect()->to('/?mode=login');
+        }
         $requests = $db->table('service_requests')->where('user_id', session()->get('user_id'))->orderBy('created_at', 'DESC')->get()->getResultArray();
         $packages = $db->table('solar_packages')->where('active', 1)->orderBy('display_order')->get()->getResultArray();
         $quotes = $db->table('quote_requests')->select('quote_requests.*, solar_packages.name AS package_name')->join('solar_packages', 'solar_packages.id = quote_requests.package_id', 'left')->where('quote_requests.user_id', session()->get('user_id'))->orderBy('quote_requests.created_at', 'DESC')->get()->getResultArray();
         $installations = $db->table('installations')->select('installations.*, solar_packages.name AS package_name')->join('solar_packages', 'solar_packages.id = installations.package_id', 'left')->where('installations.user_id', session()->get('user_id'))->orderBy('installations.created_at', 'DESC')->get()->getResultArray();
         $activity = $db->table('activity_log')->where('customer_user_id', session()->get('user_id'))->orderBy('created_at', 'DESC')->limit(12)->get()->getResultArray();
-        return view('customer_dashboard', ['user' => $user, 'requests' => $requests, 'packages' => $packages, 'quotes' => $quotes, 'installations' => $installations, 'activity' => $activity]);
+        return view('customer_dashboard', ['user' => $user, 'displayName' => trim($user['first_name'] . ' ' . $user['last_name']), 'requests' => $requests, 'packages' => $packages, 'quotes' => $quotes, 'installations' => $installations, 'activity' => $activity]);
     }
 
     public function requestQuote(): RedirectResponse
@@ -172,7 +177,8 @@ class Home extends BaseController
 
     public function admin(): string|RedirectResponse
     {
-        if (!$this->hasStaffAccess()) return redirect()->to('/?mode=login');
+        if (!session()->get('user_id')) return redirect()->to('/?mode=login');
+        if (!in_array(session()->get('role'), ['admin', 'employee'], true)) return redirect()->to(session()->get('role') === 'customer' ? '/customer' : '/?mode=login');
         if (session()->get('must_change_password')) return redirect()->to('/account/password');
         $db = db_connect();
         $users = $db->table('users')->orderBy('created_at', 'DESC')->get()->getResultArray();
