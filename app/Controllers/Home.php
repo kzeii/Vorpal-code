@@ -204,6 +204,33 @@ class Home extends BaseController
         return redirect()->to('/admin#customers')->with('success', 'Customer account created.');
     }
 
+    public function updateEmployee(int $id): RedirectResponse
+    {
+        if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
+        $db = db_connect();
+        $employee = $db->table('users')->where('id', $id)->where('role', 'employee')->get()->getRowArray();
+        if (!$employee) return redirect()->to('/admin#staff')->with('errors', ['Employee not found.']);
+        $rules = ['first_name' => 'required|max_length[100]', 'last_name' => 'required|max_length[100]', 'email' => "required|valid_email|max_length[190]|is_unique[users.email,id,{$id}]", 'username' => "required|min_length[3]|max_length[60]|is_unique[users.username,id,{$id}]"];
+        if (!$this->validate($rules)) return redirect()->to('/admin#staff')->withInput()->with('errors', $this->validator->getErrors());
+        $db->table('users')->where('id', $id)->where('role', 'employee')->update(['first_name' => trim((string)$this->request->getPost('first_name')), 'last_name' => trim((string)$this->request->getPost('last_name')), 'email' => strtolower(trim((string)$this->request->getPost('email'))), 'username' => trim((string)$this->request->getPost('username'))]);
+        $this->logActivity('staff', $id, 'Employee account details updated');
+        return redirect()->to('/admin#staff')->with('success', 'Employee details updated.');
+    }
+
+    public function deleteEmployee(int $id): RedirectResponse
+    {
+        if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
+        if ($id === (int)session()->get('user_id')) return redirect()->to('/admin#staff')->with('errors', ['You cannot delete your own administrator account.']);
+        $db = db_connect();
+        $employee = $db->table('users')->where('id', $id)->where('role', 'employee')->get()->getRowArray();
+        if ($employee) {
+            $db->table('users')->where('id', $id)->where('role', 'employee')->update(['status' => 'inactive']);
+            $this->logActivity('staff', $id, 'Employee account deactivated: '.$employee['first_name'].' '.$employee['last_name']);
+            return redirect()->to('/admin#staff')->with('success', 'Employee access revoked. The account was retained for audit history.');
+        }
+        return redirect()->to('/admin#staff')->with('errors', ['Employee account not found.']);
+    }
+
     public function updateCustomer(int $id): RedirectResponse
     {
         if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
@@ -276,6 +303,20 @@ class Home extends BaseController
         return redirect()->to('/admin#quotes')->with('success', 'Quote request deleted.');
     }
 
+    public function editQuote(int $id): RedirectResponse
+    {
+        if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
+        $rules = ['user_id' => 'required|is_not_unique[users.id]', 'package_id' => 'permit_empty|is_not_unique[solar_packages.id]', 'monthly_bill' => 'required|decimal|greater_than[0]|less_than_equal_to[1000000]', 'roof_type' => 'required|in_list[Metal,Concrete,Tile,Other]', 'status' => 'required|in_list[New,Contacted,Site Survey,Proposal Sent,Won,Lost]', 'message' => 'permit_empty|max_length[2000]', 'admin_note' => 'permit_empty|max_length[2000]'];
+        if (!$this->validate($rules)) return redirect()->to('/admin#quotes')->withInput()->with('errors', $this->validator->getErrors());
+        $db = db_connect(); $customer = $db->table('users')->where('id', $this->request->getPost('user_id'))->where('role', 'customer')->get()->getRowArray();
+        if (!$customer) return redirect()->to('/admin#quotes')->withInput()->with('errors', ['Choose a customer account.']);
+        $quote = $db->table('quote_requests')->where('id', $id)->get()->getRowArray();
+        if (!$quote) return redirect()->to('/admin#quotes')->with('errors', ['Quote not found.']);
+        $db->table('quote_requests')->where('id', $id)->update(['user_id' => $customer['id'], 'package_id' => $this->request->getPost('package_id') ?: null, 'monthly_bill' => $this->request->getPost('monthly_bill'), 'roof_type' => $this->request->getPost('roof_type'), 'status' => $this->request->getPost('status'), 'message' => trim((string)$this->request->getPost('message')) ?: null, 'admin_note' => trim((string)$this->request->getPost('admin_note')) ?: null]);
+        $this->logActivity('quote', $id, 'Quote record edited by admin', (int)$customer['id']);
+        return redirect()->to('/admin#quotes')->with('success', 'Quote updated.');
+    }
+
     public function deleteInstallation(int $id): RedirectResponse
     {
         if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
@@ -284,12 +325,39 @@ class Home extends BaseController
         return redirect()->to('/admin#installations')->with('success', 'Installation project deleted.');
     }
 
+    public function editInstallation(int $id): RedirectResponse
+    {
+        if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
+        $rules = ['user_id' => 'required|is_not_unique[users.id]', 'package_id' => 'required|is_not_unique[solar_packages.id]', 'site_address' => 'required|max_length[255]', 'scheduled_date' => 'permit_empty|valid_date[Y-m-d]', 'status' => 'required|in_list[Survey Scheduled,Design,Permitting,Installation,Inspection,Completed,Cancelled]', 'progress' => 'required|integer|greater_than_equal_to[0]|less_than_equal_to[100]', 'admin_note' => 'permit_empty|max_length[2000]'];
+        if (!$this->validate($rules)) return redirect()->to('/admin#installations')->withInput()->with('errors', $this->validator->getErrors());
+        $db = db_connect(); $customer = $db->table('users')->where('id', $this->request->getPost('user_id'))->where('role', 'customer')->get()->getRowArray();
+        if (!$customer) return redirect()->to('/admin#installations')->withInput()->with('errors', ['Choose a customer account.']);
+        $job = $db->table('installations')->where('id', $id)->get()->getRowArray();
+        if (!$job) return redirect()->to('/admin#installations')->with('errors', ['Installation not found.']);
+        $db->table('installations')->where('id', $id)->update(['user_id' => $customer['id'], 'package_id' => $this->request->getPost('package_id'), 'site_address' => trim((string)$this->request->getPost('site_address')), 'scheduled_date' => $this->request->getPost('scheduled_date') ?: null, 'status' => $this->request->getPost('status'), 'progress' => $this->request->getPost('progress'), 'admin_note' => trim((string)$this->request->getPost('admin_note')) ?: null]);
+        $this->logActivity('installation', $id, 'Installation record edited by admin', (int)$customer['id']);
+        return redirect()->to('/admin#installations')->with('success', 'Installation updated.');
+    }
+
     public function deleteRequest(int $id): RedirectResponse
     {
         if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
         $db = db_connect(); $ticket = $db->table('service_requests')->where('id', $id)->get()->getRowArray();
         if ($ticket) { $db->table('service_requests')->where('id', $id)->delete(); $this->logActivity('service', $id, 'Support request deleted', (int)$ticket['user_id']); }
         return redirect()->to('/admin#service-requests')->with('success', 'Support request deleted.');
+    }
+
+    public function editRequest(int $id): RedirectResponse
+    {
+        if (session()->get('role') !== 'admin') return redirect()->to('/?mode=login');
+        $rules = ['user_id' => 'required|is_not_unique[users.id]', 'subject' => 'required|max_length[160]', 'category' => 'required|in_list[Installation,Maintenance,Billing,Other]', 'details' => 'required|min_length[10]|max_length[5000]', 'status' => 'required|in_list[Open,In Progress,Resolved,Closed]', 'admin_note' => 'permit_empty|max_length[5000]'];
+        if (!$this->validate($rules)) return redirect()->to('/admin#service-requests')->withInput()->with('errors', $this->validator->getErrors());
+        $db = db_connect(); $customer = $db->table('users')->where('id', $this->request->getPost('user_id'))->where('role', 'customer')->get()->getRowArray();
+        if (!$customer) return redirect()->to('/admin#service-requests')->withInput()->with('errors', ['Choose a customer account.']);
+        if (!$db->table('service_requests')->where('id', $id)->countAllResults()) return redirect()->to('/admin#service-requests')->with('errors', ['Support request not found.']);
+        $db->table('service_requests')->where('id', $id)->update(['user_id' => $customer['id'], 'subject' => trim((string)$this->request->getPost('subject')), 'category' => $this->request->getPost('category'), 'details' => trim((string)$this->request->getPost('details')), 'status' => $this->request->getPost('status'), 'admin_note' => trim((string)$this->request->getPost('admin_note')) ?: null]);
+        $this->logActivity('service', $id, 'Support request edited by admin', (int)$customer['id']);
+        return redirect()->to('/admin#service-requests')->with('success', 'Support request updated.');
     }
 
     public function createEmployee(): RedirectResponse
