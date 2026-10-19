@@ -92,3 +92,36 @@ html{scroll-behavior:smooth;scroll-padding-top:90px}.solarHome{margin:0;backgrou
 @media(max-width:600px){.billCalculator{padding:15px}.billCalculator form{grid-template-columns:1fr}.billCalcResult,.billCalcActions,.billCopyMessage{grid-column:1}.billCalcActions{justify-content:stretch;flex-direction:column;align-items:stretch}.billCalcActions button{width:100%}}
 @media(max-width:760px){.appShell .appContent :where(p,small,label,.finePrint,.pillStatus,.appTable th,.appTable td,.tableButton,.leadMessage,.responseNote){font-size:13px}.appShell .appContent :where(input,select,textarea){font-size:16px}}
 @media(max-width:760px){.appShell .sideLink,.appShell .sideCaption,.appShell .appBrand>span,.appShell .sideLink:not(.active),.appShell .sideLink.active{font-size:0}.appShell .sideLink i{font-size:18px}.appShell .welcomeRow h1{font-size:23px}.appShell .welcomeRow>div>p{font-size:14px}.appShell .welcomeRow .smallCta{font-size:12px}.appShell .appSectionHeading h2{font-size:19px}.appShell .metricGrid article>small{font-size:11px}.appShell .metricGrid article>span:last-child{font-size:12px}.appShell .appTable th{font-size:11px}.appShell .appTable td,.appShell .appTable td strong,.appShell .appTable td small{font-size:13px}.listTools{justify-content:flex-start;width:100%}.listTools input,.listTools select{flex:1;min-width:125px}.activityItem{flex-wrap:wrap;padding:14px}.activityItem time{margin-left:23px;white-space:normal}}
+
+/* Match the login screen's solar-panel backdrop on every customer and operations dashboard. */
+.appShell{background:#18232a url("images/panel-background.png") center / cover fixed no-repeat}
+.appMain{background:linear-gradient(180deg,#17252bd9,#10191dcc)}
+.appContent{color:#f4f5f2}
+.appContent .welcomeRow h1,.appContent .appSectionHeading h2,.appContent h3{color:#f4f5f2}
+.appContent .welcomeRow>div>p,.appContent .appSectionHeading p,.appContent .sectionCounter,.appContent .sectionKicker{color:#d2d7d4}
+.appContent .appFooter{border-color:#ffffff30;color:#d2d7d4}
+.appContent .appFooter a{color:#d9ee92}
+/* Dark glass surfaces carry the solar image through the dashboard cards and panels. */
+.appShell .appSidebar,.appShell .appTopbar{border-color:#ffffff24;background:#111b1de8;color:#eef2ef}
+.appShell .appBrand,.appShell .sideLink,.appShell .sideLink i,.appShell .userMini strong,.appShell .breadcrumb,.appShell .topbarAccount{color:#e4ebe6}
+.appShell .appBrand strong,.appShell .todayLabel{color:#c5d0c8}
+.appShell .appBrand small,.appShell .sideCaption,.appShell .userMini small{color:#a9b7ae}
+.appShell .sideLink:hover,.appShell .sideLink.active{background:#ffffff1c;color:#fff}
+.appShell .sideLink b,.appShell .userAvatar,.appShell .topAvatar{background:#ffffff20;color:#edf3ed}
+.appShell .supportMini,.appShell .adminStatusCard{border-color:#ffffff22;background:#ffffff12;color:#f0f3ef}
+.appShell .supportMini small,.appShell .adminStatusCard small{color:#c5d0c8}
+.appShell .supportMini a,.appShell .appFooter a{color:#d9ee92}
+.appShell .userMini{border-color:#ffffff28}
+.appShell .appContent :where(.metricGrid article,.customerPackage,.quoteFormCard,.emptyState,.appTableWrap,.installCard,.installAdminCard,.twoColumnSection,.leadCard,.adminCreateCard,.adminPackageGrid article,.serviceGrid article,.activityList,.billCalculator){border-color:#ffffff30;background:#172326d9;color:#eef2ef;box-shadow:0 8px 28px #0003}
+.appShell .appContent :where(.metricGrid article>strong,.customerPackage h3,.leadCard h3,.adminCreateCard h3,.installCard h3,.installAdminCard h3,.serviceGrid h3,.adminPackageGrid h3,.billCalcResult>span){color:#f4f6f3}
+.appShell .appContent :where(.metricGrid article>small,.metricGrid article>span:last-child,.customerPackage>p,.customerPackage li,.quoteFormCard>div>p,.emptyState p,.installCard>p,.installAdminCard>p,.leadFacts strong,.leadMessage,.adminPackageGrid p,.serviceGrid p,.activityItem,.billCalculator p,.billCalcResult>p){color:#c5d0c8}
+.appShell .appContent :where(.formControl,.formSelect,.tableSearch,.tableSearch input,.listTools input,.listTools select,.billCalculator input){border-color:#ffffff35;background:#10191bd9;color:#f1f4f1}
+.appShell .appContent :where(.formControl,.formSelect,.tableSearch,.listTools input,.listTools select,.billCalculator input)::placeholder{color:#aebbb2}
+.appShell .appContent :where(.appTable th,.appTable td){border-color:#ffffff24;color:#e0e7e1}
+.appShell .appContent .appTable td small,.appShell .appContent .leadFacts small{color:#aebbb2}
+.appShell .appContent :where(.leadFacts,.leadUpdateForm,.installUpdateForm,.appSectionHeading,.activityItem){border-color:#ffffff28}
+.appShell .appContent :where(.savingsHint,.installNote,.leadMessage,.billCalcResult){border-color:#ffffff28;background:#ffffff12;color:#dce7de}
+.appShell .appContent :where(.tableButton,.outlineCta){border:1px solid #ffffff30;background:#ffffff18;color:#ecf3ed}
+.appShell .appContent :where(.tableButton,.outlineCta):hover{background:#ffffff28}
+.appShell .signOutButton,.appShell .topbarAccount{border-color:#ffffff35;background:#ffffff16;color:#e8f0e9}
+.appShell .signOutButton:hover,.appShell .topbarAccount:hover{background:#ffffff28}
