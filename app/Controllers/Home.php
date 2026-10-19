@@ -8,12 +8,12 @@ class Home extends BaseController
 {
     public function index(): string|RedirectResponse
     {
+        if ($this->request->getGet('mode') === 'login') return view('login_page');
         if (session()->get('user_id') && session()->get('must_change_password')) return redirect()->to('/account/password');
         if (session()->get('user_id') && $this->request->getGet('view') !== 'storefront') {
             return redirect()->to(in_array(session()->get('role'), ['admin', 'employee'], true) ? '/admin' : '/customer');
         }
 
-        if ($this->request->getGet('mode') === 'login') return view('login_page');
         if ($this->request->getGet('mode') === 'register') return redirect()->to('/register');
 
         $packages = db_connect()->table('solar_packages')->where('active', 1)->orderBy('display_order')->get()->getResultArray();
@@ -114,7 +114,7 @@ class Home extends BaseController
             ->get()->getRowArray();
 
         if (!$user || !password_verify((string) $this->request->getPost('password'), $user['password_hash']) || $user['status'] !== 'active') {
-            return redirect()->back()->withInput()->with('errors', ['login' => 'The credentials are incorrect or the account is inactive.']);
+            return redirect()->to('/?mode=login')->withInput()->with('errors', ['login' => 'The credentials are incorrect or the account is inactive.']);
         }
 
         session()->regenerate(true);
@@ -131,7 +131,7 @@ class Home extends BaseController
         $db = db_connect();
         $user = $db->table('users')->where('id', session()->get('user_id'))->get()->getRowArray();
         if (!$user || $user['role'] !== 'customer' || $user['status'] !== 'active') {
-            session()->destroy();
+            $this->clearActiveTabAuth();
             return redirect()->to('/?mode=login');
         }
         $requests = $db->table('service_requests')->where('user_id', session()->get('user_id'))->orderBy('created_at', 'DESC')->get()->getResultArray();
@@ -484,8 +484,28 @@ class Home extends BaseController
 
     public function logout(): RedirectResponse
     {
-        session()->destroy();
+        $session = session();
+        $token = $session->get('_active_tab_context');
+        $contexts = $session->get('auth_tab_contexts') ?? [];
+        if (is_string($token) && isset($contexts[$token])) {
+            $this->clearActiveTabAuth();
+        } else {
+            $session->destroy();
+        }
+
         return redirect()->to('/?mode=login');
+    }
+
+    private function clearActiveTabAuth(): void
+    {
+        $session = session();
+        $token = $session->get('_active_tab_context');
+        $contexts = $session->get('auth_tab_contexts') ?? [];
+        if (is_string($token)) {
+            unset($contexts[$token]);
+            $session->set('auth_tab_contexts', $contexts);
+        }
+        $session->remove(['user_id', 'name', 'role', 'must_change_password']);
     }
 
     private function hasStaffAccess(): bool

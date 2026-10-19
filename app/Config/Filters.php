@@ -25,6 +25,7 @@ class Filters extends BaseFilters
      * or [filter_name => [classname1, classname2, ...]]
      */
     public array $aliases = [
+        'tabcontext'    => \App\Filters\TabContextFilter::class,
         'csrf'          => CSRF::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
@@ -69,10 +70,12 @@ class Filters extends BaseFilters
     public array $globals = [
         'before' => [
             'csrf',
+            'tabcontext',
             // 'honeypot',
             // 'invalidchars',
         ],
         'after' => [
+            'tabcontext', // Keep each browser tab on its own account context.
             // 'honeypot',
             // 'secureheaders',
         ],

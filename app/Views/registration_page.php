@@ -112,5 +112,5 @@
   <script type="text/javascript" src="<?= base_url('js/script.js'); ?>"></script>
 
 
-</body>
+<script src="<?= base_url('js/tab-context.js') ?>" data-tab-context="<?= esc(session()->get('_active_tab_context')) ?>"></script></body>
 </html>
