@@ -125,3 +125,20 @@ html{scroll-behavior:smooth;scroll-padding-top:90px}.solarHome{margin:0;backgrou
 .appShell .appContent :where(.tableButton,.outlineCta):hover{background:#ffffff28}
 .appShell .signOutButton,.appShell .topbarAccount{border-color:#ffffff35;background:#ffffff16;color:#e8f0e9}
 .appShell .signOutButton:hover,.appShell .topbarAccount:hover{background:#ffffff28}
+/* Keep every expandable admin edit form aligned, readable, and easy to scan. */
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details{margin-top:12px;padding-top:10px;border-top:1px solid #ffffff28}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>summary{margin-bottom:12px;color:#eef3ef;font-weight:700;cursor:pointer}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList) details>summary{display:flex;align-items:center;justify-content:flex-start;gap:12px;list-style:none}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable) details>summary{font-size:0}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList) details>summary::-webkit-details-marker{display:none}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList) details>summary::after{content:'✎ Edit';flex:0 0 auto;padding:8px 12px;border:1px solid #ffffff40;border-radius:4px;background:#ffffff18;color:#f4f6f3;font-size:13px;font-weight:700}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList) details[open]>summary::after{content:'Close editor'}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>label{display:grid;gap:5px;min-width:0;margin:0;color:#dce5de;font-size:13px;line-height:1.4}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>label:has(textarea),
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>.formTwo,
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>.formThree{grid-column:1/-1}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>label:has(textarea) textarea{min-height:100px}
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>.tableButton,
+.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>.primaryCta{grid-column:1/-1;justify-self:start}
+@media(max-width:600px){.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form{grid-template-columns:1fr}.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>label:has(textarea),.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>.formTwo,.appShell .appContent :where(.leadCard,.installAdminCard,.appTable,.adminCrudList,.adminCreateCard) details>form>.formThree{grid-column:1}}
