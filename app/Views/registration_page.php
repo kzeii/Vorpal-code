@@ -9,11 +9,11 @@
     <link rel="stylesheet" type="text/css" href="<?= base_url('css/style.css'); ?>">
 
 </head>
-<body>
+<body class="authPage">
   <main class="page">
     <section class="left" style="background-image: url('<?= base_url('css/images/panel-background.png') ?>');">
       <div class="left-content">
-        <a class="logo" href="#" aria-label="Sun Son Solar home">
+        <a class="logo" href="<?= site_url('/?view=storefront') ?>" aria-label="Sun Son Solar home">
           <img src="<?= base_url('css/images/logo.png') ?>" alt="Sun Son Solar">    
           <span>Sun Son Solar</span>
         </a>
@@ -112,5 +112,5 @@
   <script type="text/javascript" src="<?= base_url('js/script.js'); ?>"></script>
 
 
-</body>
+<script src="<?= base_url('js/tab-context.js') ?>" data-tab-context="<?= esc(session()->get('_active_tab_context')) ?>"></script></body>
 </html>
