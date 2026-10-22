@@ -240,6 +240,72 @@ body {
   font-size: 12px; 
 }
 
+/* Give the sign-in and create-account pages the same dark solar treatment as the dashboards. */
+.authPage {
+  min-height: 100vh;
+  background: #18232a url("images/panel-background.png") center / cover fixed no-repeat;
+  color: #eef2ef;
+  font-family: var(--body, "DM Sans", Arial, sans-serif);
+}
+.authPage .page {
+  min-height: 100vh;
+  background: transparent;
+}
+.authPage .left {
+  width: 43%;
+  background-color: transparent;
+  background-image: none !important;
+}
+.authPage .left::before { background: linear-gradient(180deg, #08131970, #05080c8c); }
+.authPage .right {
+  width: 57%;
+  background: linear-gradient(180deg, #17252bd9, #10191dcc);
+  color: #eef2ef;
+}
+.authPage .right .form { max-width: 650px; }
+.authPage .heading h2 { color: #f4f6f3; }
+.authPage .heading p,
+.authPage .signin { color: #c5d0c8; }
+.authPage .field label,
+.authPage .terms label { color: #e0e7e1; }
+.authPage .field .formControl,
+.authPage .field .formSelect {
+  border: 1px solid #ffffff35;
+  background: #10191bd9;
+  color: #f1f4f1;
+}
+.authPage .field .formControl::placeholder { color: #aebbb2; }
+.authPage .field .formControl:focus,
+.authPage .field .formSelect:focus {
+  border-color: #8fbf9b;
+  box-shadow: 0 0 0 3px #d9ee9226;
+}
+.authPage .password button { color: #c5d0c8; }
+.authPage .terms a,
+.authPage .signin a { color: #d9ee92; }
+.authPage .button { background: #167b60; }
+.authPage .button:hover,
+.authPage .button:focus { background: #12684f; }
+.authPage .notice { border-color: #ffffff30; background: #167b6033; color: #e7f5e8; }
+.authPage .errorBox { border-color: #f2aaa866; background: #612c2c66; color: #ffe3df; }
+.authPage .rating { color: #d5ddd7; }
+.authPage .rating p { margin-top: 0; }
+.authPage .rating div,
+.authPage .rating span { display: none; }
+.authPage .terms { align-items: flex-start; }
+.authPage .terms input { margin-top: 2px; accent-color: #167b60; }
+.authPage .terms label { line-height: 1.5; }
+.authPage .right .form > form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+.authPage .right .form > form > .field { min-width: 0; }
+.authPage .right .form > form > .terms,
+.authPage .right .form > form > .button { grid-column: 1 / -1; }
+.authPage .right .form > form > .button { min-height: 48px; }
+.authPage .field .formControl,
+.authPage .field .formSelect { font-size: 15px; }
+.authPage .formControl[type="date"] { color-scheme: dark; }
+.authPage .field .formSelect option { background: #172326; color: #f1f4f1; }
+.authPage .password button { z-index: 1; }
+
 @media (max-width: 900px) {
   .left { width: 40%; }
   .right { width: 60%; padding: 38px 5%; }
@@ -257,6 +323,12 @@ body {
   .rating { font-size: 9px; }
   .rating div { margin-bottom: 4px; font-size: 13px; }
   .right { width: 100%; min-height: 0; padding: 35px 7% 42px; }
+  .authPage .left { width: 100%; }
+  .authPage .right { width: 100%; }
+  .authPage .left-content { min-height: 290px; }
+  .authPage .right .form > form { grid-template-columns: 1fr; }
+  .authPage .right .form > form > .terms,
+  .authPage .right .form > form > .button { grid-column: 1; }
 }
 @media (max-width: 480px) {
   .left, .left-content { min-height: 270px; }
@@ -317,3 +389,4 @@ body {
 .errorBox { padding:10px 14px; border:1px solid #f2d0ca; border-radius:6px; background:#fff5f3; color:#b33e2c; font-size:12px; }
 .errorBox p { margin:4px 0; }
 @media(max-width:700px) { .portalMain { margin-top:32px; } .portalMain h1 { font-size:28px; } .portalCard { padding:19px 17px; } .profileGrid { grid-template-columns:1fr; gap:14px; } .requestFields, .adminRequestForm { grid-template-columns:1fr; } .sectionHeading { align-items:flex-start; } }
+
