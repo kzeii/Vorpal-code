@@ -1,6 +1,10 @@
 -- Optional local presentation data. Uses an example.com email and demo-only credentials.
 USE sun_son_solar;
 
+-- Local demo administrator. Change this password at first sign-in.
+INSERT IGNORE INTO users (first_name, middle_name, last_name, birthdate, gender, email, phone, address, username, password_hash, role, status, must_change_password)
+VALUES ('Demo', NULL, 'Administrator', '1970-01-01', 'Prefer not to say', 'demo.admin@example.com', NULL, 'Demo account', 'admin', '$2y$10$L4VAVXDpsiIJNjgnz1dsGOF4VYVeUnJwr29UQhv6hfv12y7zQ3Eo6', 'admin', 'active', 1);
+
 INSERT IGNORE INTO users (first_name, middle_name, last_name, birthdate, gender, email, phone, address, username, password_hash, role, status)
 VALUES ('Mia', NULL, 'Santos', '1992-04-18', 'Female', 'mia.santos@example.com', '+63 917 555 0142', '14 Narra Street, Quezon City, Metro Manila', 'mia.santos', '$2y$10$Zr0.o7T7FKDF48T.CHvEQeeW7rt6RNsOzho/UYeEwnRAploOteuP6', 'customer', 'active');
 

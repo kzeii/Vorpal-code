@@ -31,14 +31,17 @@ Sun Son Solar is a CodeIgniter 4 solar storefront and operations portal. Homeown
 
 ## Optional presentation demo data
 
-To show populated customer, staff, and admin workspaces for a class presentation, import `database/demo_data.sql` after the main schema. It adds a clearly labeled sample customer, employee, quote, installation, and support request without replacing existing accounts.
+To give each local checkout demo admin access and show populated customer and staff workspaces, import `database/demo_data.sql` after the main schema. It adds a clearly labeled demo administrator, customer, employee, quote, installation, and support request without replacing accounts with the same username or email.
+
+- Demo administrator username: `admin`
+- Demo administrator temporary password: `SolarAdmin2026!` (must be changed at first sign-in)
 
 - Demo customer username: `mia.santos`
 - Demo customer password: `SolarDemo2026!`
 - Demo employee username: `solar.tech`
 - Demo employee temporary password: `SolarStaff2026!` (the employee must change it at first sign-in)
 
-Use the admin account from `php spark admin:create` to view the operations dashboard and provision employee accounts. Employee accounts are admin-created and require a password change at first sign-in; only customers can self-register. These are local demonstration records; do not reuse the demo passwords for real accounts.
+To set up the demo administrator after pulling the branch, import `database/sun_son_solar.sql`, then import `database/demo_data.sql` and sign in with the demo administrator credentials above. Alternatively, create a private administrator with `php spark admin:create`. Employee accounts are admin-created and require a password change at first sign-in; only customers can self-register. These are local demonstration records; do not reuse the demo passwords for real accounts.
 
 phpMyAdmin is the separate database-management web app supplied with packages such as XAMPP. This project provides the SQL file for it; it does not include a phpMyAdmin copy.
 
